@@ -291,7 +291,8 @@ EOF
 
 
 docker_compose() {
-if [ -x "$(command -v docker-compose)" ]; then
+docker-compose -v | grep 'Docker'
+if [ $? -eq 0 ]; then
 ok "docker-compose已安装"
 else
 ing "开始安装docker-compose..."
@@ -299,7 +300,13 @@ ing "开始安装docker-compose..."
 #curl -L https://github.com/docker/compose/releases/download/2.23.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 wget https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-`uname -s`-`uname -m` -O /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
-ok "安装docker-compose...完成"
+	docker-compose -v | grep 'Docker'
+	if [ $? -eq 0 ];then
+	ok "安装docker-compose...完成"
+	else
+	error "docker-compose安装失败,请手动排查原因。"
+	exit 2
+	fi
 fi
 }
 
